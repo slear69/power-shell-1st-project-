@@ -6,37 +6,71 @@ $jason = Get-Content $settingsPath -Raw | ConvertFrom-Json
 $vscodesettings = "$env:APPDATA\Code\User\settings.json"
 #==========================================================================================================
 
+#======================================Functions=======================================================================
+function gitsetup {
+    
+    $existingName  = & $git config --global user.name
+    $existingEmail = & $git config --global user.email
+    $gitname = ""
+    $gitgmail = ""
+    if(-not $gitname -or -not $gitgmail -and -not $existingName -and -not $existingEmail){
+        $gitname = Read-Host " username for your git"
+        $gitgmail = Read-Host " Gmail for your git "
+    }
+    
+    & $git config --global user.name $gitname
+    & $git config --global user.email $gitgmail
+}
+function InstallCheckauto{
+    param(
+        [string]$Name,
+        [string]$Id
+    )
+    winget list --id $Id -e | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "installing $Name"
+        winget install --id $Id -e
+    }
+    else {
+        Write-Host "$Name is already installed" -ForegroundColor Green
+    }
+}
+function extantioncheck{
+    param(
+        [string]$extantion,
+        [string]$name
+    )
+    $installed = code --list-extensions | Select-String -SimpleMatch $extantion
+
+    if ($installed) {
+        Write-Host "$name is already installed" -ForegroundColor Green
+    }
+    else {
+        Write-Host "installing $name"
+        code --install-extension $extantion
+    }
+}
+
+
+#==========================================================================================================
 if ($mode -eq "M")
 {
+    extantioncheck -extantion "donjayamanne.python-extension-pack" -name "Python Extension Pack"
+    extantioncheck -extantion "hackatime.hackatime-time-tracker" -name "HackTime"
+    extantioncheck -extantion "ritwickdey.liveserver" -name "Live Server"
+    extantioncheck -extantion "eamodio.gitlens" -name "GitLence"
+    
+    InstallCheckauto -Name "Visual Studeo" -Id "Microsoft.VisualStudio.Community"
 
-    winget list --id Microsoft.VisualStudio.Community | Out-Null
-    if($LASTEXITCODE -ne 0){
-        Write-Host "insatlling vs"
-        winget install --id Microsoft.VisualStudio.Community
-    }
-    else{
-        Write-Host "Founde visual Studeo" -ForegroundColor Green
-    }
+    InstallCheckauto -Name "Visual Studeo code" -Id "Microsoft.VisualStudioCode"
+    
+    InstallCheckauto -Name "Git" -Id "Git.Git"
 
+    InstallCheckauto -Name "Python" -Id "Python.Python.3.13"
 
-    winget list --id Microsoft.VisualStudioCode | Out-Null
-    if($LASTEXITCODE -ne 0){
-        Write-Host "insatlling vs code"
-        winget install --id Microsoft.VisualStudioCode
-    }
-    else{
-        Write-Host "Founde visual Studeo code" -ForegroundColor Green
-    }
+    InstallCheckauto -Name "Node.js" -Id "OpenJS.NodeJS.LTS"
 
-    winget list --id Git.Git | Out-Null
-    if($LASTEXITCODE -ne 0){
-        Write-Host "insatlling Git"
-        winget install --id Git.Git
-    }
-    else{
-        Write-Host "Founde git " -ForegroundColor Green
-    }
-
+    InstallCheckauto -Name "Spotify" -Id "Spotify.Spotify"
 
 
     if (Test-Path $vscodesettings) {
@@ -64,7 +98,7 @@ if ($mode -eq "M")
     elseif ($save -eq "F") {
         $savemode = "onFocusChange"
     }
-
+    
     $Theam = Read-Host "
     Theames wich one wloude you like :
     Default Dark Modern
@@ -131,15 +165,5 @@ $vsJson | Add-Member -MemberType NoteProperty -Name "editor.linkedEditing" -Valu
 $vsJson | Add-Member -MemberType NoteProperty -Name "explorer.confirmDelete" -Value $notify -Force
 $vsJson | ConvertTo-Json -Depth 10 | Set-Content -Path $vscodesettings -Encoding utf8
 #==================================================================================================
-function gitsetup {
-    $gitname = Read-Host " username for your git"
-    $gitgmail = Read-Host " Gmail for your git "
-    if(-not $gitname -or -not $gitgmail){
-        Write-Host"Wrtie a usernam or gamil" -ForegroundColor Red
-        $gitname = Read-Host " username for your git"
-        $gitgmail = Read-Host " Gmail for your git "
-    }
-    
-    & $git config --global user.name $gitname
-    & $git config --global user.email $gitgmail
-}
+
+
