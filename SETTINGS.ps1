@@ -130,10 +130,27 @@ if ($mode -eq "M")
     
 }
 elseif ($mode -eq "A") {
+    extantioncheck -extantion "donjayamanne.python-extension-pack" -name "Python Extension Pack"
+    extantioncheck -extantion "hackatime.hackatime-time-tracker" -name "HackTime"
+    extantioncheck -extantion "ritwickdey.liveserver" -name "Live Server"
+    extantioncheck -extantion "eamodio.gitlens" -name "GitLence"
+    
+    InstallCheckauto -Name "Visual Studeo" -Id "Microsoft.VisualStudio.Community"
+
+    InstallCheckauto -Name "Visual Studeo code" -Id "Microsoft.VisualStudioCode"
+    
+    InstallCheckauto -Name "Git" -Id "Git.Git"
+
+    InstallCheckauto -Name "Python" -Id "Python.Python.3.13"
+
+    InstallCheckauto -Name "Node.js" -Id "OpenJS.NodeJS.LTS"
+
+    InstallCheckauto -Name "Spotify" -Id "Spotify.Spotify"
     $size = 10
     $savemode="onWindowChange"
     $Theam = "Red"
     $pathbar = $false
+    $notify = $false
     $Link = $true
 }
 
@@ -163,6 +180,7 @@ $vsJson | Add-Member -MemberType NoteProperty -Name "workbench.colorTheme" -Valu
 $vsJson | Add-Member -MemberType NoteProperty -Name "breadcrumbs.enabled" -Value $pathbar -Force
 $vsJson | Add-Member -MemberType NoteProperty -Name "editor.linkedEditing" -Value $Link -Force
 $vsJson | Add-Member -MemberType NoteProperty -Name "explorer.confirmDelete" -Value $notify -Force
+$vsJson | Add-Member -MemberType NoteProperty -Name "editor.fontSize" -Value $size -Force
 $vsJson | ConvertTo-Json -Depth 10 | Set-Content -Path $vscodesettings -Encoding utf8
 #==================================================================================================
 
