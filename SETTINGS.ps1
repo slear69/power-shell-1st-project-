@@ -55,10 +55,6 @@ function extantioncheck{
 #==========================================================================================================
 if ($mode -eq "M")
 {
-    extantioncheck -extantion "donjayamanne.python-extension-pack" -name "Python Extension Pack"
-    extantioncheck -extantion "hackatime.hackatime-time-tracker" -name "HackTime"
-    extantioncheck -extantion "ritwickdey.liveserver" -name "Live Server"
-    extantioncheck -extantion "eamodio.gitlens" -name "GitLence"
     
     InstallCheckauto -Name "Visual Studeo" -Id "Microsoft.VisualStudio.Community"
 
@@ -71,6 +67,13 @@ if ($mode -eq "M")
     InstallCheckauto -Name "Node.js" -Id "OpenJS.NodeJS.LTS"
 
     InstallCheckauto -Name "Spotify" -Id "Spotify.Spotify"
+    if (winget list "Microsoft.VisualStudioCode"){
+        extantioncheck -extantion "donjayamanne.python-extension-pack" -name "Python Extension Pack"
+        extantioncheck -extantion "hackatime.hackatime-time-tracker" -name "HackTime"
+        extantioncheck -extantion "ritwickdey.liveserver" -name "Live Server"
+        extantioncheck -extantion "eamodio.gitlens" -name "GitLence"
+    }
+    
 
 
     if (Test-Path $vscodesettings) {
